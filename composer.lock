@@ -3,8 +3,52 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "064c1f23ad612789fc6933c91b6601f5",
+    "hash": "27c32de0d83a2183b3b89db92d9ba0ec",
     "packages": [
+        {
+            "name": "TrafficCophp/ByteBuffer",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nesQuick/ByteBuffer.git",
+                "reference": "41df1be4785518bfaf9f45f48566af20011d0555"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nesQuick/ByteBuffer/zipball/41df1be4785518bfaf9f45f48566af20011d0555",
+                "reference": "41df1be4785518bfaf9f45f48566af20011d0555",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "TrafficCophp": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ole 'nesQuick' Michaelis",
+                    "email": "ole.michaelis@googlemail.com",
+                    "homepage": "http://www.codestars.eu"
+                }
+            ],
+            "description": "Node.js inspired byte stream buffer for PHP.",
+            "keywords": [
+                "Buffer",
+                "Bytehandling",
+                "Socket",
+                "binary data",
+                "library",
+                "pack",
+                "stream",
+                "wrapper"
+            ],
+            "time": "2013-07-05 11:52:00"
+        },
         {
             "name": "clue/datagram",
             "version": "dev-master",
@@ -353,7 +397,8 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "clue/datagram": 20
+        "clue/datagram": 20,
+        "trafficcophp/bytebuffer": 20
     },
     "platform": [
 
