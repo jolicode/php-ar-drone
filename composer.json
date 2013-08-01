@@ -1,0 +1,14 @@
+{
+    "name": "jolicode/php-ar-drone",
+    "description": "Control your AR Drone with PHP",
+    "require": {
+        "clue/datagram": "dev-master"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Shinework",
+            "email": "adrien.baptiste@gmail.com"
+        }
+    ]
+}
