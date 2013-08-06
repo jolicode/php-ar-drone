@@ -1,5 +1,5 @@
 <?php
-$loader = require_once __DIR__ . "/../vendor/autoload.php";
+$loader = require_once __DIR__ . '/../vendor/autoload.php';
 $loader->add('jolicode\PhpARDrone', __DIR__ . '/../src/');
 
 $loop = React\EventLoop\Factory::create();
@@ -13,7 +13,7 @@ $factory->createClient('192.168.1.1', 5554)->then(function (Datagram\Socket $cli
 
     $client->on('message', function($message) {
         $frame = new jolicode\PhpARDrone\Navdata\Frame($message);
-        echo $frame->getHeader();
+        //echo $frame->getHeader();
     });
 });
 

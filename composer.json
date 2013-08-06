@@ -2,8 +2,7 @@
     "name": "jolicode/php-ar-drone",
     "description": "Control your AR Drone with PHP",
     "require": {
-        "clue/datagram": "dev-master",
-        "TrafficCophp/ByteBuffer": "dev-master"
+        "clue/datagram": "dev-master"
     },
     "license": "MIT",
     "authors": [
