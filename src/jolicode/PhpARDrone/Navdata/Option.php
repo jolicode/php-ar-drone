@@ -11,6 +11,7 @@ class Option {
 
     /**
      * @property array
+     * @see from ARDrone_SDK_2_0/ARDroneLib/Soft/Common/navdata_keys.h
      */
     public static $optionIds = array(
         0     => 'demo',

@@ -75,8 +75,8 @@ class Frame {
 
             } else {
                 $i++;
-                if ($nameOption !== 'demo') {
-
+                if ($nameOption !== 'demo' && $nameOption !== 'pwm' && $nameOption !== 'physMeasures' && $nameOption !== 'visionDetect') {
+                    echo $nameOption; die();
                 }
                 // Debug demo case
                 $option = new Option($idOption, $this->buffer);
