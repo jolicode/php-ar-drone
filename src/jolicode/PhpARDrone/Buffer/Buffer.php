@@ -36,6 +36,23 @@ class Buffer {
         return dechex($value[1]);
     }
 
+    public function getUint8()
+    {
+        $value =  unpack('C/', substr($this->data, $this->offset, ($this->offset + 1)));
+        $this->moveOffset(1);
+
+        return dechex($value[1]);
+    }
+
+    public function getInt32()
+    {
+        $value =  unpack('I/', substr($this->data, $this->offset, ($this->offset + 4)));
+        $this->moveOffset(4);
+
+        return dechex($value[1]);
+    }
+
+
     public function getVector31() {
         return array(
             'x' => $this->getFloat32(),

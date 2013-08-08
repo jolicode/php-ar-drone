@@ -67,7 +67,7 @@ class Option {
         6 => 'FLYING_NO_VISION'
     );
 
-    public function __construct($idOption, $buffer)
+    public function __construct($idOption, Buffer $buffer)
     {
         $this->buffer = $buffer;
         $this->idOption = $idOption;
@@ -83,9 +83,14 @@ class Option {
             case 'demo':
                 $this->data = $this->getDemoOptionData();
                 break;
-            case 'time':
+            case 'visionDetect':
+                $this->data = $this->getVisionDetectData();
                 break;
-            case 'rawMeasures':
+            case 'pwm':
+                $this->data = $this->getPwmData();
+                break;
+            case 'physMeasures':
+                $this->data = $this->getPhysMeasuresData();
                 break;
         }
     }
@@ -155,6 +160,84 @@ class Option {
         return $data;
     }
 
+    private function getVisionDetectData()
+    {
+        return array(
+            'nbDetected'        => $this->buffer->getUint32LE(),
+            'type'              => $this->timesMap(4, 'uint32LE'),
+            'xc'                => $this->timesMap(4, 'uint32LE'),
+            'yc'                => $this->timesMap(4, 'uint32LE'),
+            'width'             => $this->timesMap(4, 'uint32LE'),
+            'height'            => $this->timesMap(4, 'uint32LE'),
+            'dist'              => $this->timesMap(4, 'uint32LE'),
+            'orientationAngle'  => $this->timesMap(4, 'float32'),
+            'rotation'          => $this->timesMap(4, 'matrix33'),
+            'translation'       => $this->timesMap(4, 'vector31'),
+            'cameraSource'      => $this->timesMap(4, 'uint32LE')
+        );
+    }
+
+    private function getPwmData()
+    {
+        return array(
+            'motor'            => $this->timesMap(4, 'uint8'),
+            'satMotors'        => $this->timesMap(4, 'uint8'),
+            'gazFeedForward'   => $this->buffer->getFloat32(),
+            'gazAltitude'      => $this->buffer->getFloat32(),
+            'altitudeIntegral' => $this->buffer->getFloat32(),
+            'vzRef'            => $this->buffer->getFloat32(),
+            'uPitch'           => $this->buffer->getInt32(),
+            'uRoll'            => $this->buffer->getInt32(),
+            'uYaw'             => $this->buffer->getInt32(),
+            'yawUI'            => $this->buffer->getFloat32(),
+            'uPitchPlanif'     => $this->buffer->getInt32(),
+            'uRollPlanif'      => $this->buffer->getInt32(),
+            'uYawPlanif'       => $this->buffer->getInt32(),
+            'uGazPlanif'       => $this->buffer->getFloat32(),
+            'motorCurrents'    => $this->timesMap(4, 'uint16LE'),
+            'altitudeProp'     => $this->buffer->getFloat32(),
+            'altitudeDer'      => $this->buffer->getFloat32()
+        );
+    }
+
+    private function getPhysMeasuresData() {
+        return array(
+            'temperature'    => array(
+                'accelerometer' => $this->buffer->getFloat32(),
+                'gyroscope' => $this->buffer->getUint16LE()
+            ),
+            'accelerometers' => $this->buffer->getVector31(),
+            'gyroscopes'     => $this->buffer->getVector31(),
+            'alim3V3'        => $this->buffer->getUint32LE(),
+            'vrefEpson'      => $this->buffer->getUint32LE(),
+            'vrefIDG'        => $this->buffer->getUint32LE()
+        );
+    }
+
+    private function timesMap($n, $type) {
+        $data = array();
+
+        for($i = 0; $i < $n; $i++) {
+            $value = null;
+
+            if ($type === 'uint32LE') {
+                $value = $this->buffer->getUint32LE();
+            } else if ($type === 'uint16LE') {
+                $value = $this->buffer->getUint16LE();
+            } else if ($type === 'float32') {
+                $value = $this->buffer->getFloat32();
+            } else if ($type === 'matrix33') {
+                $value = $this->buffer->getMatrix33();
+            } else if ($type === 'vector31') {
+                $value = $this->buffer->getVector31();
+            } else if ($type === 'uint8') {
+                $value = $this->buffer->getUint8();
+            }
+
+            array_push($data, $value);
+        }
+
+    }
     public function getOptionName() {
         return Option::$optionIds[hexdec($this->idOption)];
     }

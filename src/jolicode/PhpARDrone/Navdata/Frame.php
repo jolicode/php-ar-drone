@@ -49,7 +49,7 @@ class Frame {
     public function getFrameOptions()
     {
         $isChecksum = false;
-
+        $i = 0;
         while(!$isChecksum) {
             $idOption =  $this->buffer->getUint16LE();
             $nameOption = Option::$optionIds[hexdec($idOption)];
@@ -74,11 +74,12 @@ class Frame {
                 $option = new Option($idOption, $this->buffer);
 
             } else {
+                $i++;
+                if ($nameOption !== 'demo') {
 
+                }
                 // Debug demo case
                 $option = new Option($idOption, $this->buffer);
-                var_dump($option->getData());
-                die();
             }
 
             array_push($this->options, $option);
