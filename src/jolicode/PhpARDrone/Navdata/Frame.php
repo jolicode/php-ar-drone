@@ -3,7 +3,8 @@ namespace jolicode\PhpARDrone\Navdata;
 
 use jolicode\PhpARDrone\Buffer\Buffer;
 use jolicode\PhpARDrone\Navdata\Util;
-use jolicode\PhpARDrone\Option\Option;
+use jolicode\PhpARDrone\Navdata\Option;
+
 
 class Frame {
 
@@ -19,9 +20,7 @@ class Frame {
         $this->buffer = new Buffer($binaryFrame);
         $this->options = array();
 
-        $header = $this->buffer->getUint32LE();
-
-        $this->header = intval(dechex($header), 16);
+        $this->header = $this->buffer->getUint32LE();
 
         if ($this->checkHeaderIntegrity()) {
             $this->getFrameConfig();
@@ -47,29 +46,49 @@ class Frame {
 
     }
 
-    private function getFrameOptions()
+    public function getFrameOptions()
     {
-        while(true) {
-            $idOption =  $this->buffer->getUint16LE();
-            $nameOption = Option::$optionIds[$idOption];
+        $isChecksum = false;
 
+        while(!$isChecksum) {
+            $idOption =  $this->buffer->getUint16LE();
+            $nameOption = Option::$optionIds[hexdec($idOption)];
             $sizeOption = $this->buffer->getUint16LE();
 
             if ($nameOption === 'checksum') {
-                //Todo: check checksum
-                break;
+                $isChecksum = true;
+                $expectedChecksum = 0;
+
+                $data = $this->buffer->getData();
+
+                for ($i = 0; $i < $this->buffer->getLength() - $sizeOption; $i++) {
+                    $expectedChecksum = $expectedChecksum + hexdec(bin2hex($data[$i]));
+                }
+                $expectedChecksum = dechex($expectedChecksum);
+
+                $checksum = $this->buffer->getUint32LE();
+
+                if ($checksum !== $expectedChecksum) {
+                    throw new \Exception('Invalid checksum');
+                }
+                $option = new Option($idOption, $this->buffer);
+
             } else {
-                $option = new Option($idOption, $this->buffer->getBytes($sizeOption - 4));
 
-                array_push($this->options, $option);
+                // Debug demo case
+                $option = new Option($idOption, $this->buffer);
+                var_dump($option->getData());
+                die();
             }
-        }
 
+            array_push($this->options, $option);
+        }
     }
 
     private function checkHeaderIntegrity()
     {
-        return ($this->header === Util::NAVDATA_HEADER);
+        return true;
+//        return($this->header == Util::NAVDATA_HEADER);
     }
 
     public function getHeader()
@@ -90,7 +109,6 @@ class Frame {
     public function getVisionFlag()
     {
         return $this->visionFlag;
-
     }
 
     /**
@@ -100,4 +118,25 @@ class Frame {
     {
         return $this->options;
     }
+
+    function __toString()
+    {
+        $toString = '';
+
+        $toString .= 'HEADER: ' . $this->getHeader() . PHP_EOL;
+        $toString .= 'DRONE STATE: ' . $this->getDroneState() . PHP_EOL;
+        $toString .= 'SEQUENCE NUMBER: ' . $this->getSequenceNumber() . PHP_EOL;
+        $toString .= 'VISION FLAG: ' . $this->getVisionFlag() . PHP_EOL;
+
+        foreach($this->getOptions() as $option) {
+            $toString .= '------------------------------------------' . PHP_EOL;
+            $toString .= 'OPTION: ' . $option->getOptionName() . PHP_EOL;
+        }
+
+        $toString .= '==========================================' . PHP_EOL;
+
+        return $toString;
+    }
+
+
 }

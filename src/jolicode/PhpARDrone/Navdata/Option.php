@@ -1,5 +1,7 @@
 <?php
-namespace jolicode\PhpARDrone\Option;
+namespace jolicode\PhpARDrone\Navdata;
+
+use jolicode\PhpARDrone\Buffer\Buffer;
 
 class Option {
 
@@ -7,6 +9,9 @@ class Option {
     private $idOption;
     private $data;
 
+    /**
+     * @property array
+     */
     public static $optionIds = array(
         0     => 'demo',
         1     => 'time',
@@ -62,9 +67,9 @@ class Option {
         6 => 'FLYING_NO_VISION'
     );
 
-    public function __construct($idOption, $binary)
+    public function __construct($idOption, $buffer)
     {
-        $this->buffer = new Buffer($binary);
+        $this->buffer = $buffer;
         $this->idOption = $idOption;
         $this->data = array();
 
@@ -73,13 +78,100 @@ class Option {
 
     private function processOption()
     {
-        switch (Option::$optionIds[$this->idOption]) {
+        // Structures from navdata_common.h
+        switch (Option::$optionIds[hexdec($this->idOption)]) {
             case 'demo':
+                $this->data = $this->getDemoOptionData();
                 break;
             case 'time':
                 break;
             case 'rawMeasures':
                 break;
         }
+    }
+
+    private function getDemoOptionData() {
+        $flyState          = Option::$flyState[$this->buffer->getUint16LE()];
+        $controlState      = Option::$controlState[$this->buffer->getUint16LE()];
+        $batteryPercentage = $this->buffer->getUint32LE();
+        $theta             = $this->buffer->getFloat32() / 1000;  // [mdeg]
+        $phi               = $this->buffer->getFloat32() / 1000;  // [mdeg]
+        $psi               = $this->buffer->getFloat32() / 1000;  // [mdeg]
+        $altitude          = $this->buffer->getUint32LE() / 1000; // [mm]
+        $velocity          = $this->buffer->getVector31();        // [mm/s]
+        $frameIndex        = $this->buffer->getUint32LE();
+
+        $detection = array(
+            'camera' => array(
+                'rotation' => $this->buffer->getMatrix33(),
+                'translation' => $this->buffer->getVector31()
+            ),
+            'tagIndex' => $this->buffer->getUint32LE()
+        );
+
+        $detection['camera']['type'] = $this->buffer->getUint32LE();
+
+        $drone = array(
+            'camera' => array(
+                'rotation' => $this->buffer->getMatrix33(),
+                'translation' => $this->buffer->getVector31()
+            ),
+        );
+
+        $rotation = array(
+            'frontBack' => $theta,
+            'pitch' => $theta,
+            'theta' => $theta,
+            'y' => $theta,
+            'leftRight' => $phi,
+            'roll' => $phi,
+            'phi' => $phi,
+            'x' => $phi,
+            'clockwise' => $psi,
+            'yaw' => $psi,
+            'psi' => $psi,
+            'z' => $psi
+        );
+
+        $data = array(
+            'controlState' => $controlState,
+            'flyState' => $flyState,
+            'batteryPercentage' => hexdec($batteryPercentage),
+            'rotation' => $rotation,
+            'frontBackDegrees' => $theta,
+            'leftRightDegrees' => $phi,
+            'clockwiseDegrees' => $psi,
+            'altitude' => $altitude,
+            'altitudeMeters' => $altitude,
+            'velocity' => $velocity,
+            'xVelocity' => $velocity['x'],
+            'yVelocity' => $velocity['y'],
+            'zVelocity' => $velocity['z'],
+            'frameIndex' => $frameIndex,
+            'detection' => $detection,
+            'drone' => $drone
+        );
+
+        return $data;
+    }
+
+    public function getOptionName() {
+        return Option::$optionIds[hexdec($this->idOption)];
+    }
+
+    /**
+     * @return \jolicode\PhpARDrone\Buffer\Buffer
+     */
+    public function getBuffer()
+    {
+        return $this->buffer;
+    }
+
+    /**
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->data;
     }
 }

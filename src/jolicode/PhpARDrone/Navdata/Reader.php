@@ -5,7 +5,6 @@ use jolicode\PhpARDrone\Navdata\Frame;
 
 class Reader {
 
-
     public function __construct(Frame $frame)
     {
     }
