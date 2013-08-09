@@ -24,6 +24,8 @@ $factory->createClient('192.168.1.1', 5554)->then(function (Datagram\Socket $cli
 
 // Control stream
 $factory->createClient('192.168.1.1', 5556)->then(function (Datagram\Socket $client) use ($loop, $emitter) {
+    $commandCreator = new \jolicode\PhpARDrone\Control\AtCommandCreator();
+
     $i = 0;
 
     $flyState = 0;
@@ -32,20 +34,30 @@ $factory->createClient('192.168.1.1', 5556)->then(function (Datagram\Socket $cli
     $timerTakeOff= null;
 
     for($j = 0; $j < 30; $j++) {
-        $client->send('AT*CONFIG=' . $j . ',"general:navdata_demo","TRUE"'."\r");
+        $command = $commandCreator->createConfigCommand('general:navdata_demo', 'TRUE');
+        $client->send($command);
+//        $client->send('AT*CONFIG=' . $j . ',"general:navdata_demo","TRUE"'."\r");
     }
 
-    $loop->addPeriodicTimer(0.01, function() use ($client, &$flyState, &$i) {
-        $client->send('AT*PCMD=' . ++$i . ',0,0,0,0,0'."\r");
-        $client->send('AT*REF='.++$i.','.$flyState.''."\r");
+    $loop->addPeriodicTimer(0.03, function() use ($client, &$flyState, &$i, $commandCreator) {
+        $cmds = array();
+
+        $cmd = $commandCreator->createRefCommand(array('fly' => $flyState, 'emergency' => false));
+        array_push($cmds,$cmd);
+
+        $cmd = $commandCreator->createPcmdCommand();
+        array_push($cmds,$cmd);
+
+        $cmds = implode('', $cmds);
+        $client->send($cmds);
     });
 
     $emitter->on('land', function() use (&$flyState) {
-        $flyState = 0;
+        $flyState = false;
     });
 
     $emitter->on('takeoff', function() use (&$flyState) {
-        $flyState = 512;
+        $flyState = true;
     });
 
 });
