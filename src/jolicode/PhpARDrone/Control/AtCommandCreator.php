@@ -75,7 +75,7 @@ class AtCommandCreator {
 
     private function floatToIEEE($floatInt) {
         $floatInt = (float) $floatInt;
-        $binInt = pack("f", $floatInt);
+        $binInt = pack('f', $floatInt);
 
         $hexInt = "";
         for($i = 0; $i < strlen($binInt); $i++) {
