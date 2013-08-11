@@ -2,25 +2,12 @@
 namespace jolicode\PhpARDrone;
 
 use Evenement\EventEmitter;
+use jolicode\PhpARDrone\Config\Config;
 
 class Repl extends EventEmitter {
 
     private $loop;
     public $prompt;
-    public $commands = array(
-        'takeoff',
-        'land',
-        'clockwise',
-        'counterClockwise',
-        'front',
-        'back',
-        'right',
-        'left',
-        'up',
-        'down',
-        'stop',
-        'exit',
-    );
 
     public function __construct($loop)
     {
@@ -36,7 +23,7 @@ class Repl extends EventEmitter {
         $this->loop->addReadStream(STDIN, function ($stdin) use ($that) {
             $input = trim(fgets($stdin));
 
-            if(in_array($input, $that->commands)) {
+            if(in_array($input, Config::$commands)) {
                 if($input === 'exit') {
                     exit;
                 } else {

@@ -4,12 +4,22 @@ $loader->add('jolicode\PhpARDrone', __DIR__ . '/../src/');
 
 $client = new \jolicode\PhpARDrone\Client();
 
-$client->connect();
-
 $client->on('navdata', function($frame) {
-    // echo $frame;
+    // do something with navdata (ie log);
 });
 
-$client->createRepl();
+$client->takeoff();
 
-$client->getLoop()->run();
+$client
+    ->after('5', function() use ($client) {
+        $client->clockwise(1);
+    })
+    ->after('5', function() use ($client) {
+        $client->counterClockwise(0.5);
+    })
+    ->after('5', function() use ($client) {
+        $client->stop();
+        $client->land();
+    });
+
+$client->start();

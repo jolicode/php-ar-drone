@@ -39,7 +39,6 @@ class UdpControl extends EventEmitter {
             $commandCreator = $udpControl->commandCreator;
             $ref            = $udpControl->ref;
             $pcmd           = $udpControl->pcmd;
-            $speed          = $udpControl->speed;
 
             for($j = 0; $j < 30; $j++) {
                 $command = $commandCreator->createConfigCommand('general:navdata_demo', 'TRUE');
@@ -56,6 +55,7 @@ class UdpControl extends EventEmitter {
                 $client->send($cmds);
             });
 
+
             $udpControl->on('land', function() use (&$ref, &$pcmd) {
                 $pcmd = array();
                 $ref['fly'] = false;
@@ -66,46 +66,46 @@ class UdpControl extends EventEmitter {
                 $ref['fly'] = true;
             });
 
-            $udpControl->on('clockwise', function() use (&$pcmd, $speed) {
+            $udpControl->on('clockwise', function($speed) use (&$pcmd) {
                 $pcmd['clockwise'] = $speed;
                 unset($pcmd['counterClockwise']);
             });
 
-            $udpControl->on('counterClockwise', function() use (&$pcmd, $speed) {
+            $udpControl->on('counterClockwise', function($speed) use (&$pcmd) {
                 $pcmd['counterClockwise'] = $speed;
                 unset($pcmd['clockwise']);
             });
 
-            $udpControl->on('stop', function() use (&$pcmd) {
+            $udpControl->on('stop', function($speed) use (&$pcmd) {
                 $pcmd = array();
             });
 
-            $udpControl->on('front', function() use (&$pcmd, $speed) {
+            $udpControl->on('front', function($speed) use (&$pcmd) {
                 $pcmd['front'] = $speed;
                 unset($pcmd['back']);
             });
 
-            $udpControl->on('back', function() use (&$pcmd, $speed) {
+            $udpControl->on('back', function($speed) use (&$pcmd) {
                 $pcmd['back'] = $speed;
                 unset($pcmd['front']);
             });
 
-            $udpControl->on('right', function() use (&$pcmd, $speed) {
+            $udpControl->on('right', function($speed) use (&$pcmd) {
                 $pcmd['right'] = $speed;
                 unset($pcmd['left']);
             });
 
-            $udpControl->on('left', function() use (&$pcmd, $speed) {
+            $udpControl->on('left', function($speed) use (&$pcmd) {
                 $pcmd['left'] = $speed;
                 unset($pcmd['right']);
             });
 
-            $udpControl->on('up', function() use (&$pcmd, $speed) {
+            $udpControl->on('up', function($speed) use (&$pcmd) {
                 $pcmd['up'] = $speed;
                 unset($pcmd['down']);
             });
 
-            $udpControl->on('down', function() use (&$pcmd, $speed) {
+            $udpControl->on('down', function($speed) use (&$pcmd) {
                 $pcmd['down'] = $speed;
                 unset($pcmd['up']);
             });
