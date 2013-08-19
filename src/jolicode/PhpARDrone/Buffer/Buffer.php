@@ -16,7 +16,6 @@ class Buffer {
     {
         $value =  unpack('V/', substr($this->data, $this->offset, ($this->offset + 4)));
         $this->moveOffset(4);
-
         return dechex($value[1]);
     }
 
@@ -52,6 +51,10 @@ class Buffer {
         return dechex($value[1]);
     }
 
+    public function getMask32($masks)
+    {
+        return $this->mask($masks, $this->getUint32LE());
+    }
 
     public function getVector31() {
         return array(
@@ -88,6 +91,17 @@ class Buffer {
         $this->offset = $this->offset + $step;
     }
 
+    //todo: move this function ?
+    private function mask($masks, $value)
+    {
+        $flags = array();
+
+        foreach($masks as $name => $mask) {
+            $flags[$name] = (hexdec($value) & ($mask)) ? 1 : 0;
+        }
+
+      return $flags;
+    }
     /**
      * @return mixed
      */

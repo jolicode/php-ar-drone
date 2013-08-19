@@ -4,6 +4,10 @@ $loader->add('jolicode\PhpARDrone', __DIR__ . '/../src/');
 
 $client = new \jolicode\PhpARDrone\Client();
 
-$client->createRepl();
+$client->on('navdata', function($frame) {
+    echo $frame;
+});
+
+//$client->createRepl();
 
 $client->start();

@@ -8,6 +8,7 @@ class Option {
     private $buffer;
     private $idOption;
     private $data;
+    private $name;
 
     /**
      * @property array
@@ -70,17 +71,17 @@ class Option {
 
     public function __construct($idOption, Buffer $buffer)
     {
-        $this->buffer = $buffer;
+        $this->buffer   = $buffer;
         $this->idOption = $idOption;
-        $this->data = array();
-
+        $this->data     = array();
+        $this->name     = Option::$optionIds[$idOption];
         $this->processOption();
     }
 
     private function processOption()
     {
         // Structures from navdata_common.h
-        switch (Option::$optionIds[hexdec($this->idOption)]) {
+        switch ($this->name) {
             case 'demo':
                 $this->data = $this->getDemoOptionData();
                 break;
@@ -126,36 +127,36 @@ class Option {
 
         $rotation = array(
             'frontBack' => $theta,
-            'pitch' => $theta,
-            'theta' => $theta,
-            'y' => $theta,
+            'pitch'     => $theta,
+            'theta'     => $theta,
+            'y'         => $theta,
             'leftRight' => $phi,
-            'roll' => $phi,
-            'phi' => $phi,
-            'x' => $phi,
+            'roll'      => $phi,
+            'phi'       => $phi,
+            'x'         => $phi,
             'clockwise' => $psi,
-            'yaw' => $psi,
-            'psi' => $psi,
-            'z' => $psi
+            'yaw'       => $psi,
+            'psi'       => $psi,
+        'z'             => $psi
         );
 
         $data = array(
-            'controlState' => $controlState,
-            'flyState' => $flyState,
+            'controlState'      => $controlState,
+            'flyState'          => $flyState,
             'batteryPercentage' => hexdec($batteryPercentage),
-            'rotation' => $rotation,
-            'frontBackDegrees' => $theta,
-            'leftRightDegrees' => $phi,
-            'clockwiseDegrees' => $psi,
-            'altitude' => $altitude,
-            'altitudeMeters' => $altitude,
-            'velocity' => $velocity,
-            'xVelocity' => $velocity['x'],
-            'yVelocity' => $velocity['y'],
-            'zVelocity' => $velocity['z'],
-            'frameIndex' => $frameIndex,
-            'detection' => $detection,
-            'drone' => $drone
+            'rotation'          => $rotation,
+            'frontBackDegrees'  => $theta,
+            'leftRightDegrees'  => $phi,
+            'clockwiseDegrees'  => $psi,
+            'altitude'          => $altitude,
+            'altitudeMeters'    => $altitude,
+            'velocity'          => $velocity,
+            'xVelocity'         => $velocity['x'],
+            'yVelocity'         => $velocity['y'],
+            'zVelocity'         => $velocity['z'],
+            'frameIndex'        => $frameIndex,
+            'detection'         => $detection,
+            'drone'             => $drone
         );
 
         return $data;
@@ -240,7 +241,7 @@ class Option {
 
     }
     public function getOptionName() {
-        return Option::$optionIds[hexdec($this->idOption)];
+        return Option::$optionIds[$this->idOption];
     }
 
     /**
@@ -257,5 +258,13 @@ class Option {
     public function getData()
     {
         return $this->data;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 }

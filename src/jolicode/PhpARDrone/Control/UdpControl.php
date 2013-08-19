@@ -40,11 +40,13 @@ class UdpControl extends EventEmitter {
             $ref            = $udpControl->ref;
             $pcmd           = $udpControl->pcmd;
 
-            for($j = 0; $j < 30; $j++) {
+            for($j = 0; $j < 5; $j++) {
                 $command = $commandCreator->createConfigCommand('general:navdata_demo', 'TRUE');
                 $client->send($command);
             }
 
+            // According to tests, a satisfying control of the AR.Drone 2.0 is reached
+            // by sending the AT-commands every 30 ms for smooth drone movements.
             $loop->addPeriodicTimer(0.03, function() use ($client, $commandCreator, &$ref, &$pcmd) {
                 $cmds = array();
 
@@ -76,7 +78,7 @@ class UdpControl extends EventEmitter {
                 unset($pcmd['clockwise']);
             });
 
-            $udpControl->on('stop', function($speed) use (&$pcmd) {
+            $udpControl->on('stop', function() use (&$pcmd) {
                 $pcmd = array();
             });
 
