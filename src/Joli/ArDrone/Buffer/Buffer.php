@@ -1,5 +1,5 @@
 <?php
-namespace jolicode\PhpARDrone\Buffer;
+namespace Joli\ArDrone\Buffer;
 
 class Buffer {
 

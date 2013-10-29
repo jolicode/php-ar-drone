@@ -1,8 +1,8 @@
 <?php
-namespace jolicode\PhpARDrone;
+namespace Joli\ArDrone;
 
 use Evenement\EventEmitter;
-use jolicode\PhpARDrone\Config\Config;
+use Joli\ArDrone\Config\Config;
 
 class Repl extends EventEmitter {
 

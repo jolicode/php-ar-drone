@@ -1,11 +1,11 @@
 <?php
-namespace jolicode\PhpARDrone\Navdata;
+namespace Joli\ArDrone\Navdata;
 
 use Evenement\EventEmitter;
-use jolicode\PhpARDrone\Config\Config;
+use Joli\ArDrone\Config\Config;
 use Datagram\Factory AS UdpFactory;
 use Datagram\Socket AS UdpSocket;
-use jolicode\PhpARDrone\Navdata\Frame;
+use Joli\ArDrone\Navdata\Frame;
 
 class UdpNavdata extends EventEmitter {
 
@@ -34,6 +34,7 @@ class UdpNavdata extends EventEmitter {
         $udpFactory->createClient(Config::DRONE_IP, Config::NAVDATA_PORT)->then(function (UdpSocket $client) use (&$socket, &$udpNavdata) {
             $socket = $client;
             // Start dialog
+            $client->send('1');
             $client->send('1');
 
             $client->on('message', function($message) use (&$udpNavdata) {

@@ -1,9 +1,9 @@
 <?php
-namespace jolicode\PhpARDrone\Navdata;
+namespace Joli\ArDrone\Navdata;
 
-use jolicode\PhpARDrone\Buffer\Buffer;
-use jolicode\PhpARDrone\Navdata\Util;
-use jolicode\PhpARDrone\Navdata\Option;
+use Joli\ArDrone\Buffer\Buffer;
+use Joli\ArDrone\Navdata\Util;
+use Joli\ArDrone\Navdata\Option;
 
 
 class Frame {
@@ -111,7 +111,7 @@ class Frame {
                 }
 
             }
-            
+
             $option = new Option($idOption, $this->buffer);
 
             $this->options[$option->getName()] = $option;

@@ -1,13 +1,13 @@
 <?php
-namespace jolicode\PhpARDrone;
+namespace Joli\ArDrone;
 
 use Evenement\EventEmitter;
-use jolicode\PhpARDrone\Control\UdpControl;
-use jolicode\PhpARDrone\Navdata\Frame;
-use jolicode\PhpARDrone\Navdata\UdpNavdata;
+use Joli\ArDrone\Control\UdpControl;
+use Joli\ArDrone\Navdata\Frame;
+use Joli\ArDrone\Navdata\UdpNavdata;
 use React\EventLoop\Factory AS LoopFactory;
 use Datagram\Factory AS UdpFactory;
-use jolicode\PhpARDrone\Config\Config;
+use Joli\ArDrone\Config\Config;
 
 class Client extends EventEmitter {
 
@@ -44,7 +44,6 @@ class Client extends EventEmitter {
         $self = $this;
 
         $this->udpNavdata->on('navdata', function(Frame $navdata) use (&$self) {
-
             if (count($navdata->getDroneState()) > 0) {
                 $stateData = $navdata->getDroneState();
                 if ($stateData['emergencyLanding'] && $self->disableEmergency) {
@@ -101,7 +100,6 @@ class Client extends EventEmitter {
 
     public function emitState($e, $state, $currentState)
     {
-        echo $currentState.PHP_EOL;
         if ($currentState === $state && $this->lastState !== $state) {
             $this->emit($e, array());
         }
@@ -120,7 +118,7 @@ class Client extends EventEmitter {
         $udpControl = $this->udpControl;
 
         $repl->on('action', function($action) use (&$udpControl) {
-            $udpControl->emit(array($action));
+            $udpControl->emit($action);
         });
     }
 

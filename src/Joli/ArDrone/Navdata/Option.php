@@ -1,7 +1,7 @@
 <?php
-namespace jolicode\PhpARDrone\Navdata;
+namespace Joli\ArDrone\Navdata;
 
-use jolicode\PhpARDrone\Buffer\Buffer;
+use Joli\ArDrone\Buffer\Buffer;
 
 class Option {
 

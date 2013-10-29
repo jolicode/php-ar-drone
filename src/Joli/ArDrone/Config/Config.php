@@ -1,5 +1,5 @@
 <?php
-namespace jolicode\PhpARDrone\Config;
+namespace Joli\ArDrone\Config;
 
 class Config {
 

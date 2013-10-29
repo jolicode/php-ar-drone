@@ -1,7 +1,7 @@
 <?php
-namespace jolicode\PhpARDrone\Control;
+namespace Joli\ArDrone\Control;
 
-use jolicode\PhpARDrone\Control\AtCommand;
+use Joli\ArDrone\Control\AtCommand;
 
 class AtCommandCreator {
 

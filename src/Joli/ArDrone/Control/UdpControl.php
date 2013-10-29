@@ -1,8 +1,8 @@
 <?php
-namespace jolicode\PhpARDrone\Control;
+namespace Joli\ArDrone\Control;
 
 use Evenement\EventEmitter;
-use jolicode\PhpARDrone\Config\Config;
+use Joli\ArDrone\Config\Config;
 use Datagram\Factory AS UdpFactory;
 use Datagram\Socket AS UdpSocket;
 
@@ -40,9 +40,20 @@ class UdpControl extends EventEmitter {
             $ref            = $udpControl->ref;
             $pcmd           = $udpControl->pcmd;
 
+            // Start dialog
+            $client->send('1');
+            $client->send('1');
+
             for($j = 0; $j < 5; $j++) {
-                $command = $commandCreator->createConfigCommand('general:navdata_demo', 'TRUE');
-                $client->send($command);
+                $cmds = array();
+
+                array_push($cmds, $commandCreator->createConfigCommand('general:navdata_demo', 'TRUE'));
+                array_push($cmds, $commandCreator->createPcmdCommand($pcmd));
+                array_push($cmds, $commandCreator->createRefCommand($ref));
+
+                $cmds = implode('', $cmds);
+                $client->send($cmds);
+                sleep(0.03);
             }
 
             // According to tests, a satisfying control of the AR.Drone 2.0 is reached

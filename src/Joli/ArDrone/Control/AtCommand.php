@@ -1,5 +1,5 @@
 <?php
-namespace jolicode\PhpARDrone\Control;
+namespace Joli\ArDrone\Control;
 
 class AtCommand {
 
