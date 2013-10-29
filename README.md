@@ -18,7 +18,7 @@ Some examples are located in the examples/ directory. Feel free to test those.
 ### Client API
 
 ```php
-$client = new \jolicode\PhpARDrone\Client();
+$client = new \Joli\ArDrone\Client();
 // use API service (see below)
 $client->start();
 ```
