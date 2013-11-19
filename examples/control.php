@@ -2,26 +2,19 @@
 $loader = require_once __DIR__ . '/../vendor/autoload.php';
 $loader->add('Joli\ArDrone', __DIR__ . '/../src/');
 
-$client = new \jolicode\PhpARDrone\Client();
+$client = new \Joli\ArDrone\Client();
 
-$client->on('navdata', function($frame) {
-    echo $frame;
-});
+$client->takeoff();
 
-$client->on('hovering', function() {
-});
-
-$client->on('landed', function() {
-});
-
-//$client->takeoff();
-//
-//$client
-//    ->after('3', function() use ($client) {
-//        $client->stop();
-//    })
-//    ->after('3', function() use ($client) {
-//        $client->land();
-//    });
+$client
+    ->after('4', function() use ($client) {
+        $client->stop();
+    })
+    ->after('4', function() use ($client) {
+        $client->clockwise(1);
+    })
+    ->after('4', function() use ($client) {
+        $client->land();
+    });
 
 $client->start();
