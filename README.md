@@ -57,10 +57,10 @@ Sets all drone movement commands to `0`, making it effectively hover in place.
 
 #### Events
 
-A client will emit landed, hovering, flying, landing, batteryChange, and altitudeChange events as long as demo navdata is enabled. Here is a example for catching event: 
+A client will emit `landed`, `hovering`, `flying`, `landing`, `batteryChange`, and `altitudeChange` events as long as demo navdata is enabled. Here is a example for catching event: 
 
 ```php
-$client->on('landed', function($frame) {
+$client->on('landed', function() {
     // do something
 });
 ```
