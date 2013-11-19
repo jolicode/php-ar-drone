@@ -10,14 +10,44 @@ use Datagram\Factory AS UdpFactory;
 use Joli\ArDrone\Config\Config;
 
 class Client extends EventEmitter {
-
+    /**
+     * @var \Joli\ArDrone\Control\UdpControl
+     */
     private $udpControl;
+
+    /**
+     * @var \Joli\ArDrone\Navdata\UdpNavdata
+     */
     private $udpNavdata;
+
+    /**
+     * @var int
+     */
     private $timerOffset;
+
+    /**
+     * @var boolean
+     */
     public $disableEmergency;
+
+    /**
+     * @var string
+     */
     public $lastState;
+
+    /**
+     * @var int
+     */
     public $lastBattery;
+
+    /**
+     * @var int
+     */
     public $lastAltitude;
+
+    /**
+     * @var \React\EventLoop\StreamSelectLoop
+     */
     private $loop;
 
     public function __construct()
@@ -25,7 +55,6 @@ class Client extends EventEmitter {
         $this->loop         = LoopFactory::create();
 
         $this->udpFactory   = new UdpFactory($this->loop);
-        $this->socket       = null;
         $this->timerOffset  = 0;
         $this->lastState    = 'CTRL_LANDED';
         $this->lastBattery  = 100;
@@ -171,5 +200,4 @@ class Client extends EventEmitter {
             new \Exception('Invalid function');
         }
     }
-
 }

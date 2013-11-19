@@ -8,10 +8,19 @@ use Datagram\Socket AS UdpSocket;
 use Joli\ArDrone\Navdata\Frame;
 
 class UdpNavdata extends EventEmitter {
-
+    /**
+     * @var \React\EventLoop\StreamSelectLoop
+     */
     private $loop;
-    private $socket;
+
+    /**
+     * @var int
+     */
     private $port;
+
+    /**
+     * @var string
+     */
     private $ip;
 
     public function __construct($loop)
@@ -19,7 +28,6 @@ class UdpNavdata extends EventEmitter {
         $this->port           = Config::CONTROL_PORT;
         $this->ip             = Config::DRONE_IP;
         $this->loop           = $loop;
-        $this->socket         = null;
 
         $this->start();
     }
@@ -31,8 +39,7 @@ class UdpNavdata extends EventEmitter {
         $udpNavdata = $this;
 
         // Navdata stream
-        $udpFactory->createClient(Config::DRONE_IP, Config::NAVDATA_PORT)->then(function (UdpSocket $client) use (&$socket, &$udpNavdata) {
-            $socket = $client;
+        $udpFactory->createClient(Config::DRONE_IP, Config::NAVDATA_PORT)->then(function (UdpSocket $client) use (&$udpNavdata) {
             // Start dialog
             $client->send('1');
             $client->send('1');

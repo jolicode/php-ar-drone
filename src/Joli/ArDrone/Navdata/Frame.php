@@ -6,13 +6,39 @@ use Joli\ArDrone\Navdata\Util;
 use Joli\ArDrone\Navdata\Option;
 
 class Frame {
-
+    /**
+     * @var \Joli\ArDrone\Buffer
+     */
     private $buffer;
+
+    /**
+     * @var int
+     */
     private $header;
+
+    /**
+     * @var int
+     */
     private $droneState;
+
+    /**
+     * @var int
+     */
     private $sequenceNumber;
+
+    /**
+     * @var int
+     */
     private $visionFlag;
+
+    /**
+     * @var array
+     */
     private $options;
+
+    /**
+     * @var array
+     */
     private $droneStateMasks;
 
     public function __construct($binaryFrame)
@@ -62,8 +88,6 @@ class Frame {
             $this->getFrameConfig();
 
             $this->getFrameOptions();
-            //Get option
-            // 1. check checksum
         } else {
             throw new \Exception('Invalid frame');
         }
@@ -79,7 +103,6 @@ class Frame {
 
         // Get vision flag
         $this->visionFlag = $this->buffer->getUint32LE();
-
     }
 
     public function getFrameOptions()
@@ -169,6 +192,4 @@ class Frame {
 
         return $toString;
     }
-
-
 }

@@ -4,9 +4,14 @@ namespace Joli\ArDrone\Control;
 use Joli\ArDrone\Control\AtCommand;
 
 class AtCommandCreator {
-
+    /**
+     * @var int
+     */
     private $sequence;
 
+    /**
+     * @var array
+     */
     private $pcmdAlias = array(
         'left'             => array('index' => 1, 'invert' => true),
         'right'            => array('index' => 1, 'invert' => false),
@@ -84,13 +89,13 @@ class AtCommandCreator {
 
     public function createAnimCommand()
     {
-
         $args = array(17, 1);
 
         return new AtCommand($this->sequence, AtCommand::TYPE_ANIM, $args);
     }
 
-    private function floatToIEEE($floatInt) {
+    private function floatToIEEE($floatInt)
+    {
         $floatInt = (float) $floatInt;
         $binInt = pack('f', $floatInt);
 

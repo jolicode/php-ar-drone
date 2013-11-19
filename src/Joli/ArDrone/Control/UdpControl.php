@@ -7,10 +7,19 @@ use Datagram\Factory AS UdpFactory;
 use Datagram\Socket AS UdpSocket;
 
 class UdpControl extends EventEmitter {
-
+    /**
+     * @var \React\EventLoop\StreamSelectLoop
+     */
     private $loop;
-    private $socket;
+
+    /**
+     * @var int
+     */
     private $port;
+
+    /**
+     * @var string
+     */
     private $ip;
 
     public function __construct($loop)
@@ -29,13 +38,11 @@ class UdpControl extends EventEmitter {
 
     private function start()
     {
-        $socket     = $this->socket;
         $udpFactory = new UdpFactory($this->loop);
         $loop       = $this->loop;
         $udpControl = $this;
 
-        $udpFactory->createClient($this->ip, $this->port)->then(function (UdpSocket $client) use (&$loop, &$socket, $udpControl) {
-            $socket         = $client;
+        $udpFactory->createClient($this->ip, $this->port)->then(function (UdpSocket $client) use (&$loop, $udpControl) {
             $commandCreator = $udpControl->commandCreator;
             $ref            = $udpControl->ref;
             $pcmd           = $udpControl->pcmd;
@@ -50,7 +57,7 @@ class UdpControl extends EventEmitter {
                 array_push($cmds, $commandCreator->createConfigCommand('general:navdata_demo', 'TRUE'));
                 array_push($cmds, $commandCreator->createPcmdCommand($pcmd));
                 array_push($cmds, $commandCreator->createRefCommand($ref));
-//
+
                 $cmds = implode('', $cmds);
                 $client->send($cmds);
                 sleep(0.03);
@@ -60,10 +67,10 @@ class UdpControl extends EventEmitter {
             // by sending the AT-commands every 30 ms for smooth drone movements.
             $loop->addPeriodicTimer(0.03, function() use ($client, $commandCreator, &$ref, &$pcmd) {
                 $cmds = array();
-//
+
                 array_push($cmds, $commandCreator->createRefCommand($ref));
                 array_push($cmds, $commandCreator->createPcmdCommand($pcmd));
-//
+
                 $cmds = implode('', $cmds);
                 $client->send($cmds);
             });

@@ -6,7 +6,14 @@ use Joli\ArDrone\Config\Config;
 
 class Repl extends EventEmitter {
 
+    /**
+     * @var \React\EventLoop\LibEventLoop|\React\EventLoop\StreamSelectLoop
+     */
     private $loop;
+
+    /**
+     * @var string
+     */
     public $prompt;
 
     public function __construct($loop)

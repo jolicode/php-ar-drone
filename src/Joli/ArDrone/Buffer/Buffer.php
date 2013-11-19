@@ -2,8 +2,14 @@
 namespace Joli\ArDrone\Buffer;
 
 class Buffer {
-
+    /**
+     * @var string
+     */
     private $data;
+
+    /**
+     * @var int
+     */
     private $offset;
 
     public function __construct($binary)
@@ -102,6 +108,7 @@ class Buffer {
 
       return $flags;
     }
+
     /**
      * @return mixed
      */

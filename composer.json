@@ -1,15 +1,23 @@
 {
     "name": "jolicode/php-ar-drone",
     "description": "Control your AR Drone over PHP",
+    "type": "library",
+    "license": "MIT",
+    "homepage": "https://github.com/jolicode/php-ar-drone",
+    "keywords": ["ar-drone", "parrot", "react", "socket"],
     "require": {
         "clue/datagram": "dev-master",
         "react/socket-client": "dev-master"
     },
-    "license": "MIT",
     "authors": [
         {
-            "name": "Shinework",
+            "name": "Baptiste Adrien",
             "email": "adrien.baptiste@gmail.com"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-0": {
+            "Joli\\ArDrone": "src/"
+        }
+    }
 }

@@ -4,10 +4,24 @@ namespace Joli\ArDrone\Navdata;
 use Joli\ArDrone\Buffer\Buffer;
 
 class Option {
-
+    /**
+     * @var \Joli\ArDrone\Buffer
+     */
     private $buffer;
+
+    /**
+     * @var int
+     */
     private $idOption;
+
+    /**
+     * @var string
+     */
     private $data;
+
+    /**
+     * @var string
+     */
     private $name;
 
     /**
@@ -97,7 +111,8 @@ class Option {
         }
     }
 
-    private function getDemoOptionData() {
+    private function getDemoOptionData()
+    {
         $flyState          = Option::$flyState[$this->buffer->getUint16LE()];
         $controlState      = Option::$controlState[$this->buffer->getUint16LE()];
         $batteryPercentage = $this->buffer->getUint32LE();
@@ -202,7 +217,8 @@ class Option {
         );
     }
 
-    private function getPhysMeasuresData() {
+    private function getPhysMeasuresData()
+    {
         return array(
             'temperature'    => array(
                 'accelerometer' => $this->buffer->getFloat32(),
@@ -216,7 +232,8 @@ class Option {
         );
     }
 
-    private function timesMap($n, $type) {
+    private function timesMap($n, $type)
+    {
         $data = array();
 
         for($i = 0; $i < $n; $i++) {
@@ -240,7 +257,9 @@ class Option {
         }
 
     }
-    public function getOptionName() {
+
+    public function getOptionName()
+    {
         return Option::$optionIds[$this->idOption];
     }
 

@@ -3,8 +3,19 @@ namespace Joli\ArDrone\Control;
 
 class AtCommand {
 
+    /**
+     * @var string
+     */
     private $type;
+
+    /**
+     * @var array
+     */
     private $args;
+
+    /**
+     * @var int
+     */
     private $sequence;
 
     const TYPE_REF    = 'REF';
