@@ -12,6 +12,7 @@ class AtCommand {
     const TYPE_CALIB  = 'CALIB';
     const TYPE_CONFIG = 'CONFIG';
     const TYPE_FTRIM  = 'FTRIM';
+    const TYPE_ANIM   = 'ANIM';
 
     public function __construct($sequence, $type, $args)
     {
@@ -22,7 +23,14 @@ class AtCommand {
 
     function __toString()
     {
-        $command = 'AT*' . $this->type . '=' . $this->sequence . ','. implode(',', $this->args) ."\r";
+        $command = 'AT*' . $this->type . '=' . $this->sequence;
+
+        if (count($this->args) > 0) {
+            $command .= ','. implode(',', $this->args);
+        }
+
+        $command .= "\r";
+
         return $command;
     }
 

@@ -21,6 +21,8 @@ class Config {
         'down',
         'stop',
         'exit',
+        'ftrim',
+        'flip'
     );
 
 

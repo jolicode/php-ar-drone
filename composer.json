@@ -1,6 +1,6 @@
 {
     "name": "jolicode/php-ar-drone",
-    "description": "Control your AR Drone with PHP",
+    "description": "Control your AR Drone over PHP",
     "require": {
         "clue/datagram": "dev-master",
         "react/socket-client": "dev-master"

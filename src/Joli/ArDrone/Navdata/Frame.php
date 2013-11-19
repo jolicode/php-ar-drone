@@ -5,7 +5,6 @@ use Joli\ArDrone\Buffer\Buffer;
 use Joli\ArDrone\Navdata\Util;
 use Joli\ArDrone\Navdata\Option;
 
-
 class Frame {
 
     private $buffer;
@@ -120,8 +119,7 @@ class Frame {
 
     private function checkHeaderIntegrity()
     {
-        return true;
-//        return ($this->header === 55667788);
+        return ($this->header === '55667788' || $this->header === '55667789');
     }
 
     public function getHeader()
@@ -164,6 +162,7 @@ class Frame {
         foreach($this->getOptions() as $option) {
             $toString .= '------------------------------------------' . PHP_EOL;
             $toString .= 'OPTION: ' . $option->getOptionName() . PHP_EOL;
+                print_r($option->getData());
         }
 
         $toString .= '==========================================' . PHP_EOL;

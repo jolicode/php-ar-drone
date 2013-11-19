@@ -245,7 +245,7 @@ class Option {
     }
 
     /**
-     * @return \jolicode\PhpARDrone\Buffer\Buffer
+     * @return \Joli\ArDrone\Buffer\Buffer
      */
     public function getBuffer()
     {

@@ -11,7 +11,6 @@ use Joli\ArDrone\Config\Config;
 
 class Client extends EventEmitter {
 
-    private $udpFactory;
     private $udpControl;
     private $udpNavdata;
     private $timerOffset;
@@ -25,8 +24,7 @@ class Client extends EventEmitter {
     {
         $this->loop         = LoopFactory::create();
 
-        $udpFactory         = new UdpFactory($this->loop);
-        $this->udpFactory   = $udpFactory;
+        $this->udpFactory   = new UdpFactory($this->loop);
         $this->socket       = null;
         $this->timerOffset  = 0;
         $this->lastState    = 'CTRL_LANDED';
@@ -47,10 +45,9 @@ class Client extends EventEmitter {
             if (count($navdata->getDroneState()) > 0) {
                 $stateData = $navdata->getDroneState();
                 if ($stateData['emergencyLanding'] && $self->disableEmergency) {
-//                    this._ref.emergency = true;
+                    //todo: disable emergency state
                 } else {
-//                    this._ref.emergency    = false;
-//                    this._disableEmergency = false;
+                    //todo: disable emergency state
                 }
             }
 
@@ -71,7 +68,6 @@ class Client extends EventEmitter {
                 $self->lastState = $currentState;
 
                 $battery = $demoData['batteryPercentage'];
-
 
                 // battery events
                 $stateData = $navdata->getDroneState();
@@ -156,13 +152,13 @@ class Client extends EventEmitter {
         if(in_array($name, Config::$commands)) {
             if ($name === 'takeoff' || $name === 'land') {
                 // process callback function
-                $callback  = (count($arguments) == 1) ? $arguments[0] : function() {};
+                $callback  = (count($arguments) === 1) ? $arguments[0] : function() {};
                 $eventName = ($name === 'takeoff') ? 'hovering' : 'landed';
 
                 $this->once($eventName, $callback);
 
                 $this->udpControl->emit($name);
-            } else if ($name === 'stop') {
+            } else if ($name === 'stop' || $name === 'ftrim' || $name === 'flip') {
                 $this->udpControl->emit($name);
             // Control commands
             } else {

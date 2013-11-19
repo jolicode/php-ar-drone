@@ -68,9 +68,26 @@ class AtCommandCreator {
             $args[$alias['index']] = $this->floatToIEEE($value);
         }
 
+        if ($args[1] != 0 || $args[2] != 0 ) {
+            $args[0] = 1;
+        }
+
         $this->sequence++;
 
         return new AtCommand($this->sequence, AtCommand::TYPE_PCMD, $args);
+    }
+
+    public function createFtrimCommand()
+    {
+        return new AtCommand($this->sequence, AtCommand::TYPE_FTRIM, array());
+    }
+
+    public function createAnimCommand()
+    {
+
+        $args = array(17, 1);
+
+        return new AtCommand($this->sequence, AtCommand::TYPE_ANIM, $args);
     }
 
     private function floatToIEEE($floatInt) {
@@ -83,17 +100,21 @@ class AtCommandCreator {
             $hexInt = sprintf("%02X", $c).$hexInt;
         }
 
-        $binIntString = decbin(hexdec($hexInt));
-        $twoComplement = '';
+        if ($floatInt < 0) {
+            $binIntString = decbin(hexdec($hexInt));
+            $twoComplement = '';
 
-        for($i=0; $i < strlen($binIntString); $i++) {
-            if ($binIntString[$i] == '0') {
-                $twoComplement .= '1';
-            } else {
-                $twoComplement .= '0';
+            for($i=0; $i < strlen($binIntString); $i++) {
+                if ($binIntString[$i] == '0') {
+                    $twoComplement .= '1';
+                } else {
+                    $twoComplement .= '0';
+                }
             }
-        }
 
-        return -(bindec($twoComplement) + 1);
+            return -(bindec($twoComplement) + 1);
+        } else {
+            return hexdec($hexInt);
+        }
     }
 }

@@ -50,7 +50,7 @@ class UdpControl extends EventEmitter {
                 array_push($cmds, $commandCreator->createConfigCommand('general:navdata_demo', 'TRUE'));
                 array_push($cmds, $commandCreator->createPcmdCommand($pcmd));
                 array_push($cmds, $commandCreator->createRefCommand($ref));
-
+//
                 $cmds = implode('', $cmds);
                 $client->send($cmds);
                 sleep(0.03);
@@ -60,10 +60,10 @@ class UdpControl extends EventEmitter {
             // by sending the AT-commands every 30 ms for smooth drone movements.
             $loop->addPeriodicTimer(0.03, function() use ($client, $commandCreator, &$ref, &$pcmd) {
                 $cmds = array();
-
+//
                 array_push($cmds, $commandCreator->createRefCommand($ref));
                 array_push($cmds, $commandCreator->createPcmdCommand($pcmd));
-
+//
                 $cmds = implode('', $cmds);
                 $client->send($cmds);
             });
@@ -74,17 +74,21 @@ class UdpControl extends EventEmitter {
                 $ref['fly'] = false;
             });
 
+            $udpControl->on('ftrim', function() use (&$client, &$commandCreator) {
+                $client->send($commandCreator->createFtrimCommand());
+            });
+
             $udpControl->on('takeoff', function() use (&$ref, &$pcmd) {
                 $pcmd = array();
                 $ref['fly'] = true;
             });
 
-            $udpControl->on('clockwise', function($speed) use (&$pcmd) {
+            $udpControl->on('clockwise', function($speed = 0.5) use (&$pcmd) {
                 $pcmd['clockwise'] = $speed;
                 unset($pcmd['counterClockwise']);
             });
 
-            $udpControl->on('counterClockwise', function($speed) use (&$pcmd) {
+            $udpControl->on('counterClockwise', function($speed = 0.5) use (&$pcmd) {
                 $pcmd['counterClockwise'] = $speed;
                 unset($pcmd['clockwise']);
             });
@@ -93,34 +97,41 @@ class UdpControl extends EventEmitter {
                 $pcmd = array();
             });
 
-            $udpControl->on('front', function($speed) use (&$pcmd) {
+            $udpControl->on('front', function($speed = 0.3) use (&$pcmd) {
                 $pcmd['front'] = $speed;
                 unset($pcmd['back']);
             });
 
-            $udpControl->on('back', function($speed) use (&$pcmd) {
+            $udpControl->on('back', function($speed = 0.3) use (&$pcmd) {
                 $pcmd['back'] = $speed;
                 unset($pcmd['front']);
             });
 
-            $udpControl->on('right', function($speed) use (&$pcmd) {
+            $udpControl->on('right', function($speed = 0.3) use (&$pcmd) {
                 $pcmd['right'] = $speed;
                 unset($pcmd['left']);
             });
 
-            $udpControl->on('left', function($speed) use (&$pcmd) {
+            $udpControl->on('left', function($speed = 0.3) use (&$pcmd) {
                 $pcmd['left'] = $speed;
                 unset($pcmd['right']);
             });
 
-            $udpControl->on('up', function($speed) use (&$pcmd) {
+            $udpControl->on('up', function($speed = 0.3) use (&$pcmd) {
                 $pcmd['up'] = $speed;
                 unset($pcmd['down']);
             });
 
-            $udpControl->on('down', function($speed) use (&$pcmd) {
+            $udpControl->on('down', function($speed = 0.3) use (&$pcmd) {
                 $pcmd['down'] = $speed;
                 unset($pcmd['up']);
+            });
+
+            $udpControl->on('flip', function() use (&$client, &$commandCreator) {
+
+                for ($i=0; $i++; $i < 20) {
+                    $client->send($commandCreator->createConfigCommand('control:flight_anim', '16,5'));
+                }
             });
         });
     }
