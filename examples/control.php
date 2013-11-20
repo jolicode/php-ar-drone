@@ -7,13 +7,31 @@ $client = new \Joli\ArDrone\Client();
 $client->takeoff();
 
 $client
-    ->after('4', function() use ($client) {
+    ->after(3, function() use ($client) {
+        $client->up(0.6);
+    })
+    ->after(4, function() use ($client) {
         $client->stop();
     })
-    ->after('4', function() use ($client) {
-        $client->clockwise(1);
+    ->after(1, function() use ($client) {
+        $client->left(0.3);
     })
-    ->after('4', function() use ($client) {
+    ->after(1, function() use ($client) {
+        $client->stop();
+    })
+    ->after(1, function() use ($client) {
+        $client->down(0.5);
+    })
+    ->after(2, function() use ($client) {
+        $client->stop();
+    })
+    ->after(1, function() use ($client) {
+        $client->right(0.3);
+    })
+    ->after(1, function() use ($client) {
+        $client->stop();
+    })
+    ->after(3, function() use ($client) {
         $client->land();
     });
 
