@@ -27,11 +27,11 @@ class UdpControl extends EventEmitter {
         $this->loop           = $loop;
         $this->port           = Config::CONTROL_PORT;
         $this->ip             = Config::DRONE_IP;
-        $this->socket         = null;
         $this->commandCreator = new AtCommandCreator();
         $this->speed          = 0.3;
         $this->ref            = array('fly' => false, 'emergency' => false);
         $this->pcmd           = array();
+        $this->anim           = array();
 
         $this->start();
     }
@@ -46,6 +46,7 @@ class UdpControl extends EventEmitter {
             $commandCreator = $udpControl->commandCreator;
             $ref            = $udpControl->ref;
             $pcmd           = $udpControl->pcmd;
+            $anim           = $udpControl->anim;
 
             // Start dialog
             $client->send('1');
@@ -65,11 +66,21 @@ class UdpControl extends EventEmitter {
 
             // According to tests, a satisfying control of the AR.Drone 2.0 is reached
             // by sending the AT-commands every 30 ms for smooth drone movements.
-            $loop->addPeriodicTimer(0.03, function() use ($client, $commandCreator, &$ref, &$pcmd) {
+            $loop->addPeriodicTimer(0.03, function() use ($client, $commandCreator, &$ref, &$pcmd, &$anim) {
                 $cmds = array();
 
                 array_push($cmds, $commandCreator->createRefCommand($ref));
                 array_push($cmds, $commandCreator->createPcmdCommand($pcmd));
+
+                if(count($anim) > 0) {
+                    for($i = 0; $i <= 10; $i++) {
+                        foreach($anim as $name => $duration) {
+                            array_push($cmds, $commandCreator->createConfigCommand($name, $duration));
+                        }
+                    }
+
+                    $anim = array();
+                }
 
                 $cmds = implode('', $cmds);
                 $client->send($cmds);
@@ -124,21 +135,18 @@ class UdpControl extends EventEmitter {
                 unset($pcmd['right']);
             });
 
-            $udpControl->on('up', function($speed = 0.3) use (&$pcmd) {
+            $udpControl->on('up', function($speed = 0.6) use (&$pcmd) {
                 $pcmd['up'] = $speed;
                 unset($pcmd['down']);
             });
 
-            $udpControl->on('down', function($speed = 0.3) use (&$pcmd) {
+            $udpControl->on('down', function($speed = 0.6) use (&$pcmd) {
                 $pcmd['down'] = $speed;
                 unset($pcmd['up']);
             });
 
-            $udpControl->on('flip', function() use (&$client, &$commandCreator) {
-
-                for ($i=0; $i++; $i < 20) {
-                    $client->send($commandCreator->createConfigCommand('control:flight_anim', '16,5'));
-                }
+            $udpControl->on('flip', function() use (&$anim) {
+                $anim['control:flight_anim'] = '16,5';
             });
         });
     }
