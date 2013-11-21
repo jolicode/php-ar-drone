@@ -1,5 +1,5 @@
 {
-    "name": "jolicode/phpardrone",
+    "name": "jolicode/php-ar-drone",
     "description": "Control your AR Drone over PHP",
     "type": "library",
     "license": "MIT",
