@@ -7,7 +7,7 @@
     "keywords": ["ar-drone", "parrot", "react", "socket"],
     "require": {
         "clue/datagram": "0.3.*",
-        "react/socket-client": "dev-master"
+        "react/socket-client": "0.3.*@dev"
     },
     "authors": [
         {
