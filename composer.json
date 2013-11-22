@@ -6,7 +6,7 @@
     "homepage": "https://github.com/jolicode/php-ar-drone",
     "keywords": ["ar-drone", "parrot", "react", "socket"],
     "require": {
-        "clue/datagram": "dev-master",
+        "clue/datagram": "0.3.*",
         "react/socket-client": "dev-master"
     },
     "authors": [
