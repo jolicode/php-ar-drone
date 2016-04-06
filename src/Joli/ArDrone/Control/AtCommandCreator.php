@@ -1,9 +1,9 @@
 <?php
+
 namespace Joli\ArDrone\Control;
 
-use Joli\ArDrone\Control\AtCommand;
-
-class AtCommandCreator {
+class AtCommandCreator
+{
     /**
      * @var int
      */
@@ -13,14 +13,14 @@ class AtCommandCreator {
      * @var array
      */
     private $pcmdAlias = array(
-        'left'             => array('index' => 1, 'invert' => true),
-        'right'            => array('index' => 1, 'invert' => false),
-        'front'            => array('index' => 2, 'invert' => true),
-        'back'             => array('index' => 2, 'invert' => false),
-        'up'               => array('index' => 3, 'invert' => false),
-        'down'             => array('index' => 3, 'invert' => true),
-        'clockwise'        => array('index' => 4, 'invert' => false),
-        'counterClockwise' => array('index' => 4, 'invert' => true)
+        'left' => array('index' => 1, 'invert' => true),
+        'right' => array('index' => 1, 'invert' => false),
+        'front' => array('index' => 2, 'invert' => true),
+        'back' => array('index' => 2, 'invert' => false),
+        'up' => array('index' => 3, 'invert' => false),
+        'down' => array('index' => 3, 'invert' => true),
+        'clockwise' => array('index' => 4, 'invert' => false),
+        'counterClockwise' => array('index' => 4, 'invert' => true),
     );
 
     public function __construct()
@@ -31,10 +31,10 @@ class AtCommandCreator {
     public function createConfigCommand($name, $value)
     {
         $args = array();
-        $config = '"' . $name . '","' . $value . '"';
+        $config = '"'.$name.'","'.$value.'"';
         array_push($args, $config);
 
-        $this->sequence++;
+        ++$this->sequence;
 
         return new AtCommand($this->sequence, AtCommand::TYPE_CONFIG, $args);
     }
@@ -54,7 +54,7 @@ class AtCommandCreator {
 
         array_push($args, $config);
 
-        $this->sequence++;
+        ++$this->sequence;
 
         return new AtCommand($this->sequence, AtCommand::TYPE_REF, $args);
     }
@@ -63,7 +63,7 @@ class AtCommandCreator {
     {
         $args = array(0, 0, 0, 0, 0);
 
-        foreach($options as $key => $value) {
+        foreach ($options as $key => $value) {
             $alias = $this->pcmdAlias[$key];
 
             if ($alias['invert']) {
@@ -73,11 +73,11 @@ class AtCommandCreator {
             $args[$alias['index']] = $this->floatToIEEE($value);
         }
 
-        if ($args[1] != 0 || $args[2] != 0 ) {
+        if ($args[1] != 0 || $args[2] != 0) {
             $args[0] = 1;
         }
 
-        $this->sequence++;
+        ++$this->sequence;
 
         return new AtCommand($this->sequence, AtCommand::TYPE_PCMD, $args);
     }
@@ -99,17 +99,17 @@ class AtCommandCreator {
         $floatInt = (float) $floatInt;
         $binInt = pack('f', $floatInt);
 
-        $hexInt = "";
-        for($i = 0; $i < strlen($binInt); $i++) {
+        $hexInt = '';
+        for ($i = 0; $i < strlen($binInt); ++$i) {
             $c = ord($binInt{$i});
-            $hexInt = sprintf("%02X", $c).$hexInt;
+            $hexInt = sprintf('%02X', $c).$hexInt;
         }
 
         if ($floatInt < 0) {
             $binIntString = decbin(hexdec($hexInt));
             $twoComplement = '';
 
-            for($i=0; $i < strlen($binIntString); $i++) {
+            for ($i = 0; $i < strlen($binIntString); ++$i) {
                 if ($binIntString[$i] == '0') {
                     $twoComplement .= '1';
                 } else {
