@@ -8,7 +8,7 @@ class Config
     const NAVDATA_PORT = 5554;
     const CONTROL_PORT = 5556;
 
-    public static $commands = array(
+    public static $commands = [
         'takeoff',
         'land',
         'clockwise',
@@ -23,5 +23,5 @@ class Config
         'exit',
         'ftrim',
         'flip',
-    );
+    ];
 }

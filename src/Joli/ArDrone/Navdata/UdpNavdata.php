@@ -47,7 +47,7 @@ class UdpNavdata extends EventEmitter
             $client->on('message',
                 function ($message) use (&$udpNavdata) {
                 $frame = new Frame($message);
-                $udpNavdata->emit('navdata', array($frame));
+                $udpNavdata->emit('navdata', [$frame]);
             });
         });
     }

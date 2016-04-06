@@ -43,7 +43,7 @@ class Frame
     public function __construct($binaryFrame)
     {
         // from ARDrone_SDK_2_0/ARDroneLib/Soft/Common/config.h
-        $this->droneStateMasks = array(
+        $this->droneStateMasks = [
             'flying' => (1 << 0),  /*!< FLY MASK => (0) ardrone is landed, (1) ardrone is flying */
             'videoEnabled' => (1 << 1),  /*!< VIDEO MASK => (0) video disable, (1) video enable */
             'visionEnabled' => (1 << 2),  /*!< VISION MASK => (0) vision disable, (1) vision enable */
@@ -76,10 +76,10 @@ class Frame
             'adcWatchdogDelay' => (1 << 29), /*!< ADC Watchdog => (1) delay in uart2 dsr (> 5ms), (0) uart2 is good */
             'comWatchdogProblem' => (1 << 30), /*!< Communication Watchdog => (1) com problem, (0) Com is ok */
             'emergencyLanding' => (1 << 31),  /*!< Emergency landing : (0) no emergency, (1) emergency */
-        );
+        ];
 
         $this->buffer = new Buffer($binaryFrame);
-        $this->options = array();
+        $this->options = [];
 
         $this->header = $this->buffer->getUint32LE();
 

@@ -31,9 +31,9 @@ class UdpControl extends EventEmitter
         $this->ip = Config::DRONE_IP;
         $this->commandCreator = new AtCommandCreator();
         $this->speed = 0.3;
-        $this->ref = array('fly' => false, 'emergency' => false);
-        $this->pcmd = array();
-        $this->anim = array();
+        $this->ref = ['fly' => false, 'emergency' => false];
+        $this->pcmd = [];
+        $this->anim = [];
 
         $this->start();
     }
@@ -55,7 +55,7 @@ class UdpControl extends EventEmitter
             $client->send('1');
 
             for ($j = 0; $j < 5; ++$j) {
-                $cmds = array();
+                $cmds = [];
 
                 array_push($cmds,
                     $commandCreator->createConfigCommand('general:navdata_demo',
@@ -72,7 +72,7 @@ class UdpControl extends EventEmitter
             // by sending the AT-commands every 30 ms for smooth drone movements.
             $loop->addPeriodicTimer(0.03,
                 function () use ($client, $commandCreator, &$ref, &$pcmd, &$anim) {
-                $cmds = array();
+                $cmds = [];
 
                 array_push($cmds, $commandCreator->createRefCommand($ref));
                 array_push($cmds, $commandCreator->createPcmdCommand($pcmd));
@@ -86,7 +86,7 @@ class UdpControl extends EventEmitter
                         }
                     }
 
-                    $anim = array();
+                    $anim = [];
                 }
 
                 $cmds = implode('', $cmds);
@@ -95,7 +95,7 @@ class UdpControl extends EventEmitter
 
             $udpControl->on('land',
                 function () use (&$ref, &$pcmd) {
-                $pcmd = array();
+                $pcmd = [];
                 $ref['fly'] = false;
             });
 
@@ -106,7 +106,7 @@ class UdpControl extends EventEmitter
 
             $udpControl->on('takeoff',
                 function () use (&$ref, &$pcmd) {
-                $pcmd = array();
+                $pcmd = [];
                 $ref['fly'] = true;
             });
 
@@ -124,7 +124,7 @@ class UdpControl extends EventEmitter
 
             $udpControl->on('stop',
                 function () use (&$pcmd) {
-                $pcmd = array();
+                $pcmd = [];
             });
 
             $udpControl->on('front',

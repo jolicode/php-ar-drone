@@ -104,11 +104,11 @@ class Client extends EventEmitter
                 $stateData = $navdata->getDroneState();
 
                 if ($stateData['lowBattery'] === 1) {
-                    $self->emit('lowBattery', array($battery));
+                    $self->emit('lowBattery', [$battery]);
                 }
 
                 if ($battery !== $self->lastBattery) {
-                    $self->emit('batteryChange', array($battery));
+                    $self->emit('batteryChange', [$battery]);
                     $self->lastBattery = $battery;
                 }
 
@@ -116,19 +116,19 @@ class Client extends EventEmitter
                 $altitude = $demoData['altitudeMeters'];
 
                 if ($altitude !== $self->lastAltitude) {
-                    $self->emit('altitudeChange', array($altitude));
+                    $self->emit('altitudeChange', [$altitude]);
                     $self->lastAltitude = $altitude;
                 }
             }
 
-            $self->emit('navdata', array($navdata));
+            $self->emit('navdata', [$navdata]);
         });
     }
 
     public function emitState($e, $state, $currentState)
     {
         if ($currentState === $state && $this->lastState !== $state) {
-            $this->emit($e, array());
+            $this->emit($e, []);
         }
     }
 
@@ -196,7 +196,7 @@ class Client extends EventEmitter
                 if (count($arguments) > 1) {
                     new \Exception('There are too many arguments');
                 }
-                $this->udpControl->emit($name, array($arguments[0]));
+                $this->udpControl->emit($name, [$arguments[0]]);
             }
         } else {
             new \Exception('Invalid function');

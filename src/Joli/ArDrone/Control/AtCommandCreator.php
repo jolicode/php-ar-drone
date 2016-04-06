@@ -12,16 +12,16 @@ class AtCommandCreator
     /**
      * @var array
      */
-    private $pcmdAlias = array(
-        'left' => array('index' => 1, 'invert' => true),
-        'right' => array('index' => 1, 'invert' => false),
-        'front' => array('index' => 2, 'invert' => true),
-        'back' => array('index' => 2, 'invert' => false),
-        'up' => array('index' => 3, 'invert' => false),
-        'down' => array('index' => 3, 'invert' => true),
-        'clockwise' => array('index' => 4, 'invert' => false),
-        'counterClockwise' => array('index' => 4, 'invert' => true),
-    );
+    private $pcmdAlias = [
+        'left' => ['index' => 1, 'invert' => true],
+        'right' => ['index' => 1, 'invert' => false],
+        'front' => ['index' => 2, 'invert' => true],
+        'back' => ['index' => 2, 'invert' => false],
+        'up' => ['index' => 3, 'invert' => false],
+        'down' => ['index' => 3, 'invert' => true],
+        'clockwise' => ['index' => 4, 'invert' => false],
+        'counterClockwise' => ['index' => 4, 'invert' => true],
+    ];
 
     public function __construct()
     {
@@ -30,7 +30,7 @@ class AtCommandCreator
 
     public function createConfigCommand($name, $value)
     {
-        $args = array();
+        $args = [];
         $config = '"'.$name.'","'.$value.'"';
         array_push($args, $config);
 
@@ -42,7 +42,7 @@ class AtCommandCreator
     public function createRefCommand($options)
     {
         $config = 0;
-        $args = array();
+        $args = [];
 
         if ($options['fly'] === true) {
             $config = $config | (1 << 9);
@@ -61,7 +61,7 @@ class AtCommandCreator
 
     public function createPcmdCommand($options)
     {
-        $args = array(0, 0, 0, 0, 0);
+        $args = [0, 0, 0, 0, 0];
 
         foreach ($options as $key => $value) {
             $alias = $this->pcmdAlias[$key];
@@ -84,12 +84,12 @@ class AtCommandCreator
 
     public function createFtrimCommand()
     {
-        return new AtCommand($this->sequence, AtCommand::TYPE_FTRIM, array());
+        return new AtCommand($this->sequence, AtCommand::TYPE_FTRIM, []);
     }
 
     public function createAnimCommand()
     {
-        $args = array(17, 1);
+        $args = [17, 1];
 
         return new AtCommand($this->sequence, AtCommand::TYPE_ANIM, $args);
     }

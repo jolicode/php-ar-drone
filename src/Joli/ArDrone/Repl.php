@@ -35,7 +35,7 @@ class Repl extends EventEmitter
                 if ($input === 'exit') {
                     exit;
                 } else {
-                    $that->emit('action', array($input));
+                    $that->emit('action', [$input]);
                 }
             } else {
                 echo 'Unknown command'.PHP_EOL;

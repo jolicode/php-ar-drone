@@ -31,7 +31,7 @@ class Option
      *
      * @see from ARDrone_SDK_2_0/ARDroneLib/Soft/Common/navdata_keys.h
      */
-    public static $optionIds = array(
+    public static $optionIds = [
         0 => 'demo',
         1 => 'time',
         2 => 'rawMeasures',
@@ -61,9 +61,9 @@ class Option
         26 => 'wifi',
         27 => 'zimmu3000',
         65535 => 'checksum',
-    );
+    ];
 
-    public static $controlState = array(
+    public static $controlState = [
         0 => 'CTRL_DEFAULT',
         1 => 'CTRL_INIT',
         2 => 'CTRL_LANDED',
@@ -74,9 +74,9 @@ class Option
         7 => 'CTRL_TRANS_GOTOFIX',
         8 => 'CTRL_TRANS_LANDING',
         9 => 'CTRL_TRANS_LOOPING',
-    );
+    ];
 
-    public static $flyState = array(
+    public static $flyState = [
         0 => 'FLYING_OK',
         1 => 'FLYING_LOST_ALT',
         2 => 'FLYING_LOST_ALT_GO_DOWN',
@@ -84,13 +84,13 @@ class Option
         4 => 'FLYING_COMBINED_YAW',
         5 => 'FLYING_BRAKE',
         6 => 'FLYING_NO_VISION',
-    );
+    ];
 
     public function __construct($idOption, Buffer $buffer)
     {
         $this->buffer = $buffer;
         $this->idOption = $idOption;
-        $this->data = array();
+        $this->data = [];
         $this->name = self::$optionIds[$idOption];
         $this->processOption();
     }
@@ -126,24 +126,24 @@ class Option
         $velocity = $this->buffer->getVector31();        // [mm/s]
         $frameIndex = $this->buffer->getUint32LE();
 
-        $detection = array(
-            'camera' => array(
+        $detection = [
+            'camera' => [
                 'rotation' => $this->buffer->getMatrix33(),
                 'translation' => $this->buffer->getVector31(),
-            ),
+            ],
             'tagIndex' => $this->buffer->getUint32LE(),
-        );
+        ];
 
         $detection['camera']['type'] = $this->buffer->getUint32LE();
 
-        $drone = array(
-            'camera' => array(
+        $drone = [
+            'camera' => [
                 'rotation' => $this->buffer->getMatrix33(),
                 'translation' => $this->buffer->getVector31(),
-            ),
-        );
+            ],
+        ];
 
-        $rotation = array(
+        $rotation = [
             'frontBack' => $theta,
             'pitch' => $theta,
             'theta' => $theta,
@@ -156,9 +156,9 @@ class Option
             'yaw' => $psi,
             'psi' => $psi,
         'z' => $psi,
-        );
+        ];
 
-        $data = array(
+        $data = [
             'controlState' => $controlState,
             'flyState' => $flyState,
             'batteryPercentage' => hexdec($batteryPercentage),
@@ -175,14 +175,14 @@ class Option
             'frameIndex' => $frameIndex,
             'detection' => $detection,
             'drone' => $drone,
-        );
+        ];
 
         return $data;
     }
 
     private function getVisionDetectData()
     {
-        return array(
+        return [
             'nbDetected' => $this->buffer->getUint32LE(),
             'type' => $this->timesMap(4, 'uint32LE'),
             'xc' => $this->timesMap(4, 'uint32LE'),
@@ -194,12 +194,12 @@ class Option
             'rotation' => $this->timesMap(4, 'matrix33'),
             'translation' => $this->timesMap(4, 'vector31'),
             'cameraSource' => $this->timesMap(4, 'uint32LE'),
-        );
+        ];
     }
 
     private function getPwmData()
     {
-        return array(
+        return [
             'motor' => $this->timesMap(4, 'uint8'),
             'satMotors' => $this->timesMap(4, 'uint8'),
             'gazFeedForward' => $this->buffer->getFloat32(),
@@ -217,27 +217,27 @@ class Option
             'motorCurrents' => $this->timesMap(4, 'uint16LE'),
             'altitudeProp' => $this->buffer->getFloat32(),
             'altitudeDer' => $this->buffer->getFloat32(),
-        );
+        ];
     }
 
     private function getPhysMeasuresData()
     {
-        return array(
-            'temperature' => array(
+        return [
+            'temperature' => [
                 'accelerometer' => $this->buffer->getFloat32(),
                 'gyroscope' => $this->buffer->getUint16LE(),
-            ),
+            ],
             'accelerometers' => $this->buffer->getVector31(),
             'gyroscopes' => $this->buffer->getVector31(),
             'alim3V3' => $this->buffer->getUint32LE(),
             'vrefEpson' => $this->buffer->getUint32LE(),
             'vrefIDG' => $this->buffer->getUint32LE(),
-        );
+        ];
     }
 
     private function timesMap($n, $type)
     {
-        $data = array();
+        $data = [];
 
         for ($i = 0; $i < $n; ++$i) {
             $value = null;

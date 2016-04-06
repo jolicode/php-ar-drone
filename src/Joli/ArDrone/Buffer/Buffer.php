@@ -67,16 +67,16 @@ class Buffer
 
     public function getVector31()
     {
-        return array(
+        return [
             'x' => $this->getFloat32(),
             'y' => $this->getFloat32(),
             'z' => $this->getFloat32(),
-        );
+        ];
     }
 
     public function getMatrix33()
     {
-        return array(
+        return [
             'm11' => $this->getFloat32(),
             'm12' => $this->getFloat32(),
             'm13' => $this->getFloat32(),
@@ -86,7 +86,7 @@ class Buffer
             'm31' => $this->getFloat32(),
             'm32' => $this->getFloat32(),
             'm33' => $this->getFloat32(),
-        );
+        ];
     }
 
     public function getBytes($nbBytes)
@@ -105,7 +105,7 @@ class Buffer
     //todo: move this function ?
     private function mask($masks, $value)
     {
-        $flags = array();
+        $flags = [];
 
         foreach ($masks as $name => $mask) {
             $flags[$name] = (hexdec($value) & ($mask)) ? 1 : 0;
