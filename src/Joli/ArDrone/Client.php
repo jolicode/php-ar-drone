@@ -6,7 +6,7 @@ use Joli\ArDrone\Control\UdpControl;
 use Joli\ArDrone\Navdata\Frame;
 use Joli\ArDrone\Navdata\UdpNavdata;
 use React\EventLoop\Factory AS LoopFactory;
-use Datagram\Factory AS UdpFactory;
+use React\Datagram\Factory AS UdpFactory;
 use Joli\ArDrone\Config\Config;
 
 class Client extends EventEmitter {
