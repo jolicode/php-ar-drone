@@ -1,15 +1,17 @@
 <?php
+
 namespace Joli\ArDrone;
 
 use Evenement\EventEmitter;
 use Joli\ArDrone\Control\UdpControl;
 use Joli\ArDrone\Navdata\Frame;
 use Joli\ArDrone\Navdata\UdpNavdata;
-use React\EventLoop\Factory AS LoopFactory;
-use React\Datagram\Factory AS UdpFactory;
+use React\EventLoop\Factory as LoopFactory;
+use React\Datagram\Factory as UdpFactory;
 use Joli\ArDrone\Config\Config;
 
-class Client extends EventEmitter {
+class Client extends EventEmitter
+{
     /**
      * @var \Joli\ArDrone\Control\UdpControl
      */
@@ -26,7 +28,7 @@ class Client extends EventEmitter {
     private $timerOffset;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $disableEmergency;
 
@@ -52,12 +54,12 @@ class Client extends EventEmitter {
 
     public function __construct()
     {
-        $this->loop         = LoopFactory::create();
+        $this->loop = LoopFactory::create();
 
-        $this->udpFactory   = new UdpFactory($this->loop);
-        $this->timerOffset  = 0;
-        $this->lastState    = 'CTRL_LANDED';
-        $this->lastBattery  = 100;
+        $this->udpFactory = new UdpFactory($this->loop);
+        $this->timerOffset = 0;
+        $this->lastState = 'CTRL_LANDED';
+        $this->lastBattery = 100;
         $this->lastAltitude = 0;
         $this->disableEmergency = false;
 
@@ -70,7 +72,7 @@ class Client extends EventEmitter {
         $this->udpNavdata = new UdpNavdata($this->loop);
         $self = $this;
 
-        $this->udpNavdata->on('navdata', function(Frame $navdata) use (&$self) {
+        $this->udpNavdata->on('navdata', function (Frame $navdata) use (&$self) {
             if (count($navdata->getDroneState()) > 0) {
                 $stateData = $navdata->getDroneState();
                 if ($stateData['emergencyLanding'] && $self->disableEmergency) {
@@ -102,11 +104,11 @@ class Client extends EventEmitter {
                 $stateData = $navdata->getDroneState();
 
                 if ($stateData['lowBattery'] === 1) {
-                    $self->emit('lowBattery', array($battery));
+                    $self->emit('lowBattery', [$battery]);
                 }
 
                 if ($battery !== $self->lastBattery) {
-                    $self->emit('batteryChange', array($battery));
+                    $self->emit('batteryChange', [$battery]);
                     $self->lastBattery = $battery;
                 }
 
@@ -114,19 +116,19 @@ class Client extends EventEmitter {
                 $altitude = $demoData['altitudeMeters'];
 
                 if ($altitude !== $self->lastAltitude) {
-                    $self->emit('altitudeChange', array($altitude));
+                    $self->emit('altitudeChange', [$altitude]);
                     $self->lastAltitude = $altitude;
                 }
             }
 
-            $self->emit('navdata', array($navdata));
+            $self->emit('navdata', [$navdata]);
         });
     }
 
     public function emitState($e, $state, $currentState)
     {
         if ($currentState === $state && $this->lastState !== $state) {
-            $this->emit($e, array());
+            $this->emit($e, []);
         }
     }
 
@@ -142,7 +144,7 @@ class Client extends EventEmitter {
 
         $udpControl = $this->udpControl;
 
-        $repl->on('action', function($action) use (&$udpControl) {
+        $repl->on('action', function ($action) use (&$udpControl) {
             $udpControl->emit($action);
         });
     }
@@ -178,23 +180,23 @@ class Client extends EventEmitter {
 
     public function __call($name, $arguments)
     {
-        if(in_array($name, Config::$commands)) {
+        if (in_array($name, Config::$commands)) {
             if ($name === 'takeoff' || $name === 'land') {
                 // process callback function
-                $callback  = (count($arguments) === 1) ? $arguments[0] : function() {};
+                $callback = (count($arguments) === 1) ? $arguments[0] : function () {};
                 $eventName = ($name === 'takeoff') ? 'hovering' : 'landed';
 
                 $this->once($eventName, $callback);
 
                 $this->udpControl->emit($name);
-            } else if ($name === 'stop' || $name === 'ftrim' || $name === 'flip') {
+            } elseif ($name === 'stop' || $name === 'ftrim' || $name === 'flip') {
                 $this->udpControl->emit($name);
             // Control commands
             } else {
                 if (count($arguments) > 1) {
                     new \Exception('There are too many arguments');
                 }
-                $this->udpControl->emit($name, array($arguments[0]));
+                $this->udpControl->emit($name, [$arguments[0]]);
             }
         } else {
             new \Exception('Invalid function');

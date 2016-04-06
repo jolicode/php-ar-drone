@@ -1,11 +1,12 @@
 <?php
+
 namespace Joli\ArDrone;
 
 use Evenement\EventEmitter;
 use Joli\ArDrone\Config\Config;
 
-class Repl extends EventEmitter {
-
+class Repl extends EventEmitter
+{
     /**
      * @var \React\EventLoop\LibEventLoop|\React\EventLoop\StreamSelectLoop
      */
@@ -18,7 +19,7 @@ class Repl extends EventEmitter {
 
     public function __construct($loop)
     {
-        $this->loop   = $loop;
+        $this->loop = $loop;
         $this->prompt = 'drone> ';
     }
 
@@ -30,14 +31,14 @@ class Repl extends EventEmitter {
         $this->loop->addReadStream(STDIN, function ($stdin) use ($that) {
             $input = trim(fgets($stdin));
 
-            if(in_array($input, Config::$commands)) {
-                if($input === 'exit') {
+            if (in_array($input, Config::$commands)) {
+                if ($input === 'exit') {
                     exit;
                 } else {
-                    $that->emit('action', array($input));
+                    $that->emit('action', [$input]);
                 }
             } else {
-                echo 'Unknown command' . PHP_EOL;
+                echo 'Unknown command'.PHP_EOL;
             }
 
             echo $that->prompt;
@@ -48,7 +49,8 @@ class Repl extends EventEmitter {
         echo $this->prompt;
     }
 
-    private function getAsciiArt() {
+    private function getAsciiArt()
+    {
         return "
      _ __ | |__  _ __         __ _ _ __       __| |_ __ ___  _ __   ___
     | '_ \| '_ \| '_ \ _____ / _` | '__|____ / _` | '__/ _ \| '_ \ / _ \
